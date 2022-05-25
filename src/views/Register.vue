@@ -99,13 +99,23 @@ export default {
               )
                 .then((value) => {
                   if (value.status == 200) {
+
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yyyy = today.getFullYear();
+
+                    today = mm + '/' + dd + '/' + yyyy;
+                  
+                    
                     console.log(value.data.users[0].localId);
                     Axios.put(
                       "https://optipapa-c3caa-default-rtdb.firebaseio.com/users/" +
                         value.data.users[0].localId+".json",
                       {
                         id:value.data.users[0].localId,
-                        email:this.email
+                        email:this.email,
+                        date:today,
                       }
                     )
                       .then((value) => {
