@@ -4,7 +4,14 @@
       <div class="container">
         <div class="md-layout">
           <div
-            class="md-layout-item md-size-33 md-small-size-66 md-xsmall-size-100 md-medium-size-40 mx-auto"
+            class="
+              md-layout-item
+              md-size-33
+              md-small-size-66
+              md-xsmall-size-100
+              md-medium-size-40
+              mx-auto
+            "
           >
             <login-card header-color="green">
               <h4 slot="title" class="card-title">Register</h4>
@@ -29,7 +36,9 @@
               >
                 <i class="fab fa-google-plus-g"></i>
               </md-button>
-              <p slot="description" class="description">Cultivos a tu alcance</p>
+              <p slot="description" class="description">
+                Cultivos a tu alcance
+              </p>
               <md-field class="md-form-group" slot="inputs">
                 <md-icon>email</md-icon>
                 <label>Email</label>
@@ -40,7 +49,11 @@
                 <label>Password</label>
                 <md-input v-model="password"></md-input>
               </md-field>
-              <md-button slot="footer" class="md-simple md-success md-lg" @click="register">
+              <md-button
+                slot="footer"
+                class="md-simple md-success md-lg"
+                @click="register"
+              >
                 Register
               </md-button>
             </login-card>
@@ -53,44 +66,76 @@
 
 <script>
 import { LoginCard } from "@/components";
-import Axios from 'axios';
+import Axios from "axios";
 export default {
   components: {
-    LoginCard
+    LoginCard,
   },
   bodyClass: "login-page",
   data() {
     return {
       firstname: null,
       email: null,
-      password: null
+      password: null,
     };
   },
   props: {
     header: {
       type: String,
-      default: require("@/assets/img/profile_city.jpg")
-    }
+      default: require("@/assets/img/profile_city.jpg"),
+    },
   },
-  methods:{
-      register(){
-        Axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDQPsaMOD_f7rQD4r5g2ISPO4lDyRAveww",{email:this.email,password:this.password})
-        .then((value)=>{
-          if(value.status==200){
-            this.$router.push({path:'/'});
-          }
-        }).catch((error)=>{
+  methods: {
+    register() {
+      Axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDQPsaMOD_f7rQD4r5g2ISPO4lDyRAveww",
+        { email: this.email, password: this.password }
+      )
+        .then((value) => {
+          if (value.status == 200) {
+              Axios.post(
+                "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDQPsaMOD_f7rQD4r5g2ISPO4lDyRAveww",
+                { idToken: value.data.idToken }
+              )
+                .then((value) => {
+                  if (value.status == 200) {
+                    console.log(value.data.users[0].localId);
+                    Axios.put(
+                      "https://optipapa-c3caa-default-rtdb.firebaseio.com/users/" +
+                        value.data.users[0].localId+".json",
+                      {
+                        id:value.data.users[0].localId,
+                        email:this.email
+                      }
+                    )
+                      .then((value) => {
+                        console.log(value);
+                        if (value.status == 200) {
+                          this.$router.push({ path: "/" });
+                        }
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+        })
+        .catch((error) => {
           console.log(error);
         });
-      }
+    },
   },
   computed: {
     headerStyle() {
       return {
-        backgroundImage: `url(${this.header})`
+        backgroundImage: `url(${this.header})`,
       };
-    }
-  }
+    },
+  },
 };
 </script>
 

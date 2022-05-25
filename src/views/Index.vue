@@ -43,6 +43,9 @@
               <md-button slot="footer" class="md-simple md-success md-lg" @click="login">
                 Get Started
               </md-button>
+              <md-button slot="footer" class="md-simple md-success md-lg" @click="signUp">
+                Sign Up
+              </md-button>
             </login-card>
           </div>
         </div>
@@ -78,6 +81,9 @@ export default {
     }
   },
   methods:{
+      signUp(){
+        this.$router.push({path:"/register"});
+      },
       login(){
         Axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDQPsaMOD_f7rQD4r5g2ISPO4lDyRAveww",
         {email:this.email,password:this.password})
