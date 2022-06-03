@@ -18,7 +18,7 @@ export default new Router({
       name: "login",
       components: { default: Index, header: MainNavbar, footer: MainFooter },
       props: {
-        header: { colorOnScroll: 400 },
+        header: { colorOnScroll: 400, logged: false },
         footer: { backgroundColor: "black" }
       }
     },
@@ -27,7 +27,7 @@ export default new Router({
       name: "register",
       components: { default: Register, header: MainNavbar, footer: MainFooter },
       props: {
-        header: { colorOnScroll: 400 },
+        header: { colorOnScroll: 400, logged:false },
         footer: { backgroundColor: "black" }
       }
     },
@@ -61,7 +61,7 @@ export default new Router({
       name: "forgot",
       components: { default: Forgot, header: MainNavbar, footer: MainFooter },
       props: {
-        header: { colorOnScroll: 400 }
+        header: { colorOnScroll: 400, logged: false }
       }
     },
     {

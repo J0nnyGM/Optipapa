@@ -1,5 +1,5 @@
 <template>
-  <md-toolbar
+  <md-toolbar v-if="logged"
     id="toolbar"
     md-elevation="0"
     class="md-transparent md-absolute"
@@ -62,7 +62,7 @@
                 </a>
               </li>
 
-              <md-list-item                
+              <md-list-item
                 @click="logout"
               >
                 <i class="material-icons">content_paste</i>
@@ -176,6 +176,10 @@ export default {
     // MobileMenu
   },
   props: {
+    logged:{
+      type: Boolean,
+      default:true
+    },
     type: {
       type: String,
       default: "white",
