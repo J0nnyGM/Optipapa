@@ -7,6 +7,7 @@ import Landing from "./views/Landing.vue";
 import Profile from "./views/Profile.vue";
 import MainNavbar from "./layout/MainNavbar.vue";
 import MainFooter from "./layout/MainFooter.vue";
+import Forgot from "./views/Forgot.vue";
 
 Vue.use(Router);
 
@@ -51,6 +52,14 @@ export default new Router({
       path: "/login",
       name: "login",
       components: { default: Index, header: MainNavbar, footer: MainFooter },
+      props: {
+        header: { colorOnScroll: 400 }
+      }
+    },
+    {
+      path: "/forgot",
+      name: "forgot",
+      components: { default: Forgot, header: MainNavbar, footer: MainFooter },
       props: {
         header: { colorOnScroll: 400 }
       }

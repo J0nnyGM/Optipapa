@@ -4,7 +4,14 @@
       <div class="container">
         <div class="md-layout">
           <div
-            class="md-layout-item md-size-33 md-small-size-66 md-xsmall-size-100 md-medium-size-40 mx-auto"
+            class="
+              md-layout-item
+              md-size-33
+              md-small-size-66
+              md-xsmall-size-100
+              md-medium-size-40
+              mx-auto
+            "
           >
             <login-card header-color="green">
               <h4 slot="title" class="card-title">Login</h4>
@@ -29,7 +36,9 @@
               >
                 <i class="fab fa-google-plus-g"></i>
               </md-button>
-              <p slot="description" class="description">Cultivos a tu alcance</p>
+              <p slot="description" class="description">
+                Cultivos a tu alcance
+              </p>
               <md-field class="md-form-group" slot="inputs">
                 <md-icon>email</md-icon>
                 <label>Email</label>
@@ -40,14 +49,36 @@
                 <label>Password</label>
                 <md-input v-model="password"></md-input>
               </md-field>
-              <md-button slot="footer" class="md-simple md-success md-lg" @click="login">
+              <md-button
+                slot="footer"
+                class="md-simple md-success md-lg"
+                @click="login"
+              >
                 Get Started
               </md-button>
-              <md-button slot="footer" class="md-simple md-success md-lg" @click="signUp">
+              <md-button
+                slot="footer"
+                class="md-simple md-success md-lg"
+                @click="signUp"
+              >
                 Sign Up
               </md-button>
             </login-card>
+            <router-link to="/forgot"
+              ><p style="color: white">Forgot password?</p></router-link
+            >
           </div>
+          <md-snackbar
+              :style="{backgroundColor:colorSnackbar}"
+              :md-position="position"
+              :md-duration="isInfinity ? Infinity : duration"
+              :md-active.sync="showSnackbar"
+              md-persistent
+            >
+              <span>{{message}}</span>
+              <!-- <md-button class="md-primary" @click="showSnackbar = false"
+                >Retry</md-button> -->              
+            </md-snackbar>
         </div>
       </div>
     </div>
@@ -64,9 +95,15 @@ export default {
   bodyClass: "login-page",
   data() {
     return {
+      colorSnackbar:"#4caf50",
+      showSnackbar: false,
+      message:"",
+      position: 'center',
+      duration: 4000,
+      isInfinity: false,
       firstname: null,
-      email: null,
-      password: null
+      email: "",
+      password: ""
     };
   },
   props: {
@@ -85,6 +122,32 @@ export default {
         this.$router.push({path:"/register"});
       },
       login(){
+        if(this.email.length==0 || this.password.length == 0){
+          this.colorSnackbar = "#d32f2f";
+          this.showSnackbar = true;
+          this.message = "Email and password fields shouldn't be empty"
+          return;
+        }
+        const validateEmail = String(this.email).toLowerCase()
+        .match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+        if(!validateEmail){
+          this.colorSnackbar = "#d32f2f";
+          this.showSnackbar = true;
+          this.message = "Email should be valid"
+          return;
+        }
+
+
+        const validatePassword = String(this.password)
+        .match(/^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+*!=]).*$/);
+        if(!validatePassword){
+          this.colorSnackbar = "#d32f2f";
+          this.showSnackbar = true;
+          this.message = "Password should be valid"
+          return;
+        }
+
+
         Axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDQPsaMOD_f7rQD4r5g2ISPO4lDyRAveww",
         {email:this.email,password:this.password})
         .then((valueUser)=>{
