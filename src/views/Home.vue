@@ -26,9 +26,11 @@
             <md-table-head>Nombre</md-table-head>
             <md-table-head>Descripcion</md-table-head>
             <md-table-head>Temperatura</md-table-head>
+            <md-table-head>Ultima vez que llovio</md-table-head>
+            <md-table-head>Esta lloviendo</md-table-head>
             <md-table-head>Humedad del ambiente</md-table-head>
             <md-table-head>Luz</md-table-head>
-            <md-table-head>Ultima vez que llovio</md-table-head>
+            <md-table-head>Humedad del suelo</md-table-head>
           </md-table-row>
 
           <md-table-row v-for="item in items" :key="item.id">
@@ -39,10 +41,16 @@
               getLastProperty(item.temperature).value
             }}</md-table-cell>
             <md-table-cell>{{
+             getLastPropertyWithCondition(item.lluviaDigital,element => element.value==1).date
+            }}</md-table-cell>
+            <md-table-cell>{{
+              getLastProperty(item.lluviaAnalog).value==1?"Si":"No"
+            }}</md-table-cell>
+            <md-table-cell>{{
               getLastProperty(item.humidity).value
             }}</md-table-cell>
             <md-table-cell>{{ getLastProperty(item.square_ratio).value }}</md-table-cell>
-            <md-table-cell>{{ item.lastRain }}</md-table-cell>
+            <md-table-cell>{{ getLastProperty(item.sueloAnalog).value }}</md-table-cell>
           </md-table-row>
         </md-table>
       </div>
@@ -156,13 +164,20 @@ export default {
           "/cultivos");
     onValue(users, (snapshot) => {
       this.items = snapshot.val();
-      console.log({...snapshot.val()})
     });
   },
   methods: {
     getLastProperty(json) {
       var lastKey = Object.keys(json).sort().reverse()[0];
       return json[lastKey];
+    },
+    getLastPropertyWithCondition(json,condition) {
+      var keys = Object.keys(json).sort().reverse();
+      for(var i =0;i<keys.length;i++){
+        if(condition(json[keys[i]])){      
+          return json[keys[i]];
+        }
+      }
     },
     leafActive() {
       if (window.innerWidth < 768) {
